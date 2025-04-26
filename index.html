@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Match Stats Overlay</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    /* ======= THEME SETTINGS ======= */
+    :root {
+      --background-color: rgba(0, 0, 0, 0.6);
+      --card-background: rgba(255, 255, 255, 0.05);
+      --font-color: #ffffff;
+      --accent-color: #00b7ff;
+      --border-color: rgba(255, 255, 255, 0.2);
+      --team-gap: 80px;
+      --blur-amount: 10px;
+    }
+
+    /* ======= BASE STYLES ======= */
+    body {
+      margin: 0;
+      background: transparent;
+      font-family: 'Poppins', sans-serif;
+      color: var(--font-color);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .stats-container {
+      background: var(--background-color);
+      backdrop-filter: blur(var(--blur-amount));
+      padding: 30px 50px;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      gap: var(--team-gap);
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+      border: 2px solid var(--border-color);
+    }
+
+    .team {
+      background: var(--card-background);
+      padding: 20px;
+      border-radius: 15px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 300px;
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+      border: 1px solid var(--border-color);
+    }
+
+    .team img {
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
+      border-radius: 50%;
+      border: 3px solid var(--accent-color);
+      margin-bottom: 15px;
+      box-shadow: 0 0 15px var(--accent-color);
+      background: #ffffff;
+    }
+
+    .team-name {
+      font-size: 22px;
+      font-weight: 600;
+      margin-bottom: 15px;
+    }
+
+    .team-stats {
+      font-size: 18px;
+      text-align: left;
+      line-height: 1.8;
+      width: 100%;
+    }
+
+    .stat-line {
+      display: flex;
+      justify-content: space-between;
+      margin: 4px 0;
+    }
+
+    .stat-label {
+      font-weight: 400;
+    }
+
+    .stat-value {
+      font-weight: 600;
+    }
+
+    /* Optional: Vertical divider between teams */
+    .divider {
+      width: 4px;
+      height: 250px;
+      background: var(--border-color);
+      border-radius: 2px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="stats-container" id="stats">
+  Loading stats...
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
+<script>
+  const sheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vROGa9erqjeKVKodaw_RokJwbDHrBXYOCvSx9ALT5C1yUfUx70pKJo5cUv_4e5rhz6a2jSwXN46fyE-/pub?output=csv';
+
+  function updateStats() {
+    Papa.parse(sheetUrl, {
+      download: true,
+      header: true,
+      complete: function(results) {
+        const data = results.data[0];
+
+        // Get team names from the spreadsheet
+        const team1Name = data['Team 1 Name'];
+        const team2Name = data['Team 2 Name'];
+
+        document.getElementById('stats').innerHTML = `
+          <div class="team">
+            <img src="${data['Team 1 Logo URL']}" alt="Team 1 Logo">
+            <div class="team-name">${team1Name}</div>
+            <div class="team-stats">
+              <div class="stat-line"><div class="stat-label">Shots</div><div class="stat-value">${data['Team 1 Shots']}</div></div>
+              <div class="stat-line"><div class="stat-label">On Target</div><div class="stat-value">${data['Team 1 Shots on Target']}</div></div>
+              <div class="stat-line"><div class="stat-label">Chances</div><div class="stat-value">${data['Team 1 Chances']}</div></div>
+              <div class="stat-line"><div class="stat-label">Corners</div><div class="stat-value">${data['Team 1 Corners']}</div></div>
+              <div class="stat-line"><div class="stat-label">Goal Kicks</div><div class="stat-value">${data['Team 1 Goal Kicks']}</div></div>
+              <div class="stat-line"><div class="stat-label">Throw Ins</div><div class="stat-value">${data['Team 1 Throw Ins']}</div></div>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="team">
+            <img src="${data['Team 2 Logo URL']}" alt="Team 2 Logo">
+            <div class="team-name">${team2Name}</div>
+            <div class="team-stats">
+              <div class="stat-line"><div class="stat-label">Shots</div><div class="stat-value">${data['Team 2 Shots']}</div></div>
+              <div class="stat-line"><div class="stat-label">On Target</div><div class="stat-value">${data['Team 2 Shots on Target']}</div></div>
+              <div class="stat-line"><div class="stat-label">Chances</div><div class="stat-value">${data['Team 2 Chances']}</div></div>
+              <div class="stat-line"><div class="stat-label">Corners</div><div class="stat-value">${data['Team 2 Corners']}</div></div>
+              <div class="stat-line"><div class="stat-label">Goal Kicks</div><div class="stat-value">${data['Team 2 Goal Kicks']}</div></div>
+              <div class="stat-line"><div class="stat-label">Throw Ins</div><div class="stat-value">${data['Team 2 Throw Ins']}</div></div>
+            </div>
+          </div>
+        `;
+      }
+    });
+  }
+
+  // Initial call to load stats
+  updateStats();
+</script>
+
+</body>
+</html>
