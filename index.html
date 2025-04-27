@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
-<!DOCTYPE html>
-<html lang="en">
 <head>
   <meta charset="UTF-8">
   <title>Match Stats Overlay</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
   <style>
-    /* ======= THEME SETTINGS ======= */
     :root {
       --background-color: rgba(0, 0, 0, 0.6);
       --card-background: rgba(255, 255, 255, 0.05);
@@ -17,8 +17,6 @@
       --team-gap: 80px;
       --blur-amount: 10px;
     }
-
-    /* ======= BASE STYLES ======= */
     body {
       margin: 0;
       background: transparent;
@@ -30,7 +28,6 @@
       align-items: center;
       height: 100vh;
     }
-
     .stats-container {
       background: var(--background-color);
       backdrop-filter: blur(var(--blur-amount));
@@ -42,7 +39,6 @@
       box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
       border: 2px solid var(--border-color);
     }
-
     .team {
       background: var(--card-background);
       padding: 20px;
@@ -55,7 +51,6 @@
       box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
       border: 1px solid var(--border-color);
     }
-
     .team img {
       width: 100px;
       height: 100px;
@@ -66,35 +61,28 @@
       box-shadow: 0 0 15px var(--accent-color);
       background: #ffffff;
     }
-
     .team-name {
       font-size: 22px;
       font-weight: 600;
       margin-bottom: 15px;
     }
-
     .team-stats {
       font-size: 18px;
       text-align: left;
       line-height: 1.8;
       width: 100%;
     }
-
     .stat-line {
       display: flex;
       justify-content: space-between;
       margin: 4px 0;
     }
-
     .stat-label {
       font-weight: 400;
     }
-
     .stat-value {
       font-weight: 600;
     }
-
-    /* Optional: Vertical divider between teams */
     .divider {
       width: 4px;
       height: 250px;
@@ -111,16 +99,19 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
 <script>
-  const sheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vROGa9erqjeKVKodaw_RokJwbDHrBXYOCvSx9ALT5C1yUfUx70pKJo5cUv_4e5rhz6a2jSwXN46fyE-/pub?output=csv';
+  const sheetBaseUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vROGa9erqjeKVKodaw_RokJwbDHrBXYOCvSx9ALT5C1yUfUx70pKJo5cUv_4e5rhz6a2jSwXN46fyE-/pub?output=csv';
+
+  function getFreshSheetUrl() {
+    const timestamp = new Date().getTime();
+    return `${sheetBaseUrl}&t=${timestamp}`; // Add timestamp to URL to bust cache
+  }
 
   function updateStats() {
-    Papa.parse(sheetUrl, {
+    Papa.parse(getFreshSheetUrl(), {
       download: true,
       header: true,
       complete: function(results) {
         const data = results.data[0];
-
-        // Get team names from the spreadsheet
         const team1Name = data['Team 1 Name'];
         const team2Name = data['Team 2 Name'];
 
@@ -157,7 +148,6 @@
     });
   }
 
-  // Initial call to load stats
   updateStats();
 </script>
 
